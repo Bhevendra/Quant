@@ -42,6 +42,11 @@ settings["annualization_factor"] = st.sidebar.number_input(
     "annualization_factor", value=int(settings["annualization_factor"]), min_value=1
 )
 
+settings["market_ticker"] = st.sidebar.text_input("market_ticker", value=settings.get("market_ticker", "^NSEI"))
+settings["rf_annual"] = st.sidebar.number_input("rf_annual (decimal)", value=float(settings.get("rf_annual", 0.0)), min_value=0.0, step=0.005)
+settings["use_excess_returns_for_beta"] = st.sidebar.checkbox("Use excess returns for beta (CAPM)", value=bool(settings.get("use_excess_returns_for_beta", False)))
+
+
 use_log_returns = st.sidebar.checkbox("Use log returns", value=False)
 
 if not use_json:
@@ -95,17 +100,17 @@ if st.button("Compute portfolio variance"):
         # KPI HEADER (TOP)
         # =========================
         st.subheader("KPIs")
-        k1, k2, k3, k4, k5 = st.columns(5)
+        k1, k2, k3, k4, k5, k6 = st.columns(6)
 
         k1.metric("Total Invested (₹)", f"{res['total_invested']:,.0f}")
         k2.metric("Variance (Weekly)", f"{res['var_weekly']:.10f}")
         k3.metric("Variance (Annual)", f"{res['var_annual']:.10f}")
         k4.metric("Volatility (Weekly)", f"{res['vol_weekly']:.4%}")
         k5.metric("Volatility (Annual)", f"{res['vol_annual']:.4%}")
-
+        k6.metric("Portfolio Beta", f"{res['beta_port_weighted']:.3f}")
         st.success(
-            f"✅ Your portfolio variance is **{res['var_annual']:.10f} (annual)** "
-            f"and **{res['var_weekly']:.10f} (weekly)**"
+            f"✅ Your portfolio variance is **{res['var_annual']:.10f} (annual)** and **{res['var_weekly']:.10f} (weekly)**. "
+            f"Portfolio beta vs {res['market_ticker']} is **{res['beta_port_weighted']:.3f}**."
         )
 
         st.divider()
@@ -113,6 +118,23 @@ if st.button("Compute portfolio variance"):
         # =========================
         # DETAILS BELOW KPIs
         # =========================
+
+
+        st.markdown("### Betas")
+
+        b1, b2 = st.columns(2)
+
+        with b1:
+            st.markdown("**Individual asset betas**")
+            beta_df = res["betas"].reindex(assets).to_frame("Beta").round(4)
+            st.dataframe(beta_df, use_container_width=True)
+
+        with b2:
+            st.markdown("**Portfolio beta (two methods)**")
+            st.write(f"- Weighted betas: **{res['beta_port_weighted']:.4f}**")
+            st.write(f"- From portfolio returns: **{res['beta_port_from_returns']:.4f}**")
+            st.caption("These should be very close. Small differences come from alignment/rounding.")
+
         c1, c2 = st.columns(2)
 
         with c1:
