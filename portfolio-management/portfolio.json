@@ -1,0 +1,22 @@
+{
+  "as_of": "2026-01-20",
+  "assets": [
+    "NIFTYBEES.NS",
+    "SILVERIETF.NS",
+    "GOLDBEES.NS",
+    "BANKBEES.NS"
+  ],
+  "invested_amounts": {
+    "NIFTYBEES.NS": 254224,
+    "SILVERIETF.NS": 63175,
+    "GOLDBEES.NS": 91636,
+    "BANKBEES.NS": 75419
+  },
+  "total_invested": 484454,
+  "data_settings": {
+    "period": "5y",
+    "interval": "1wk",
+    "price_field": "Adj Close",
+    "annualization_factor": 52
+  }
+}
