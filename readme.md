@@ -70,3 +70,31 @@ You can optionally compute beta using **excess returns** (CAPM style):
 ## Project structure
 
 Typical layout:
+
+```
+portfolio-management/
+app.py                 # Streamlit UI (pages + inputs + tables + KPI display)
+portfolio_calc.py      # Analytics engine (returns, cov, beta, sharpe, treynor, M²)
+scheme_finder.py       # Scheme Code Finder page + mfapi master search logic
+requirements.txt
+.streamlit/
+config.toml          # Streamlit config (no forced port for cloud)
+README.md
+runtime.txt              # Python runtime pin for Streamlit Cloud (repo root)
+```
+
+
+------
+------
+```
+---
+
+## Run locally (or in GitHub Codespaces)
+
+### 1) Install dependencies
+```bash
+pip install -r portfolio-management/requirements.txt
+streamlit run portfolio-management/app.py
+cd portfolio-management
+streamlit run app.py
+```
